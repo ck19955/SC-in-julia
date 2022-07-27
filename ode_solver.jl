@@ -1,9 +1,5 @@
 using Plots
-
-function ode_second_order(t, u)
-    u_array = [u[2], -u[1]]
-    return u_array
-end
+include("function_examples.jl")
 
 
 function euler_step(t, x, step_size, ode)
