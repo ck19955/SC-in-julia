@@ -12,6 +12,33 @@ function euler_step(t, x, step_size, ode)
 end
 
 
+function rk4(t, x, step_size, ode)
+    """
+    Executes a single step of the 4th Order Runge Kutta method for given value, t_n
+    Parameters:
+    ----------
+        t_n : float
+            The value of the independent variable
+        x_n : numpy array
+            The value of the dependant variable(s)
+        step_size : float
+            The step-size of the rk4 step to be executed
+        ode : function
+            The ODE for which the rk4 step predicts
+        args : numpy array
+            The parameters of the ODE
+    Returns:
+    ----------
+        x : numpy array
+            The new value of the dependant variable(s) after an rk4 step
+"""
+    k1 = ode(t, x)
+    k2 = ode(t + step_size/2, x + k1*(step_size/2))
+    k3 = ode(t + step_size/2, x + k2*(step_size/2))
+    k4 = ode(t + step_size, x + k3*step_size)
+    x = x + ((k1 + 2*k2 + 2*k3 + k4)/6)*step_size
+    return x
+end
 
 
 function solve_to(t_0, t_end, x_0, deltaT_max, method, ode)
@@ -89,6 +116,6 @@ function solve_ode(t_values, x_0, deltaT_max, method, ode)
 end
 
 t_values = LinRange(1, 10, 100)
-x_values = solve_ode(t_values, [3, 4], 0.1, euler_step, ode_second_order)
+x_values = solve_ode(t_values, [3, 4], 0.01, rk4, ode_second_order)
 
 plot(t_values, x_values[:, 1])
